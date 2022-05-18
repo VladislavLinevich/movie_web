@@ -7,8 +7,6 @@ from embed_video.fields import EmbedVideoField
 
 class Category(models.Model):
     name = models.CharField("Категории", max_length=20)
-    # description = models.TextField("Описание")
-    # url = models.SlugField(max_length=160, unique=True)
 
     def __str__(self):
         return self.name
@@ -20,8 +18,6 @@ class Category(models.Model):
 class Genre(models.Model):
     """Жанры"""
     name = models.CharField("Имя", max_length=20)
-    # description = models.TextField("Описание")
-    # url = models.SlugField(max_length=160, unique=True)
 
     def __str__(self):
         return self.name
@@ -44,7 +40,7 @@ class Actor(models.Model):
     get_image.short_description = "Фото"
 
     def get_absolute_url(self):
-        return reverse('movie-detail', args=[str(self.id)])
+        return reverse('actor-detail', args=[str(self.id)])
     
     class Meta:
         verbose_name = "Актеры и режиссеры"
@@ -73,7 +69,6 @@ class Movie(models.Model):
     category = models.ForeignKey(
         Category, verbose_name="Категория", on_delete=models.SET_NULL, null=True
     )
-    # url = models.SlugField(max_length=130, unique=True)
     draft = models.BooleanField("Черновик", default=False)
     video = EmbedVideoField(blank=True, verbose_name='Видео')
 

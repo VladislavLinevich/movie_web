@@ -5,7 +5,7 @@ services:
     build: ./
     command: python manage.py runserver 0.0.0.0:8005
     volumes:
-      - .//:/movie_web/
+      - .:/movie_web
     ports:
       - 8005:8005
     env_file:

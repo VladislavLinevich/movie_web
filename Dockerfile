@@ -13,8 +13,8 @@ RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 
 # install dependencies
 RUN pip install --upgrade pip
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+COPY requirements.txt /movie_web/requirements.txt
+RUN pip install -r /movie_web/requirements.txt
 
 # copy project
 COPY . .
