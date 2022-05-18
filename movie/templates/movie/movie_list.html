@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+    
+
+{% block content %}
+<!---->
+<!-- banner -->
+<div class="main-banner " id="home">
+    <!-- header -->
+    <header class="header">
+        <div class="container-fluid px-lg-5">
+            <!-- nav -->
+            <nav class="py-4">
+                <div id="logo">
+                    <h1> <a href="index.html" class="editContent" style="outline: none; outline-offset: -2px; cursor: inherit; color: rgb(255, 255, 255); font-size: 40px; background-color: rgba(0, 0, 0, 0); font-family: Source Sans Pro, sans-serif">Movie-Website</a></h1>
+                </div>
+
+                <label for="drop" class="toggle">Menu</label>
+                <input type="checkbox" id="drop">
+                <ul class="menu mt-2">
+                    <li class="active"><a href="index.html">Главная</a></li>
+                    <li>
+                        <!-- First Tier Drop Down -->
+                        <label for="drop-2" class="toggle">Категории <span class="fa fa-angle-down" aria-hidden="true" ></span> </label>
+                        <a href="#">Категории <span class="fa fa-angle-down" aria-hidden="true"></span></a>
+                        <input type="checkbox" id="drop-2">
+                        <ul>
+                            <li><a href="moviesingle.html">Фильмы</a></li>
+                            <li><a href="moviesingle.html">Сериалы</a></li>
+                            <li><a href="moviesingle.html">Мультфильмы</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html" style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;">Вход</a></li>
+                </ul>
+            </nav>
+            <!-- //nav -->
+        </div>
+    </header>
+    <!-- //header -->
+    <!--/banner-->
+    <div class="banner-info">
+        <p class="editContent" >Сайт созданный на Django</p>
+        <h3 class="mb-4 editContent">Все о кино</h3>
+        <div class="ban-buttons">
+
+
+        </div>
+    </div>
+    <!--// banner-inner -->
+
+</div>
+<section class="ab-info-main py-md-5 py-4 editContent" style="padding-left: 3rem; padding-right: 3rem;">
+    <div class="container-fluid py-md-3">
+        <div class="row">
+            {% include 'sidebar.html' %}
+            <!-- //product left -->
+            <!-- product right -->
+            <div class="left-ads-display col-lg-9">
+                <div class="row">
+                    {% for movie in movie_list %}
+                        <div class="col-md-4 product-men">
+                            <div class="product-shoe-info editContent text-center mt-lg-4" >
+                                <div class="men-thumb-item">
+                                    <img src="{{ movie.poster }}" class="img-fluid" alt="Cannot load photo, sorry!" >
+                                </div>
+                                <div class="item-info-product">
+                                    <h4 class="">
+                                        <a href="{{ movie.get_absolute_url }}" class="editContent" >{{ movie.title }}</a>
+                                    </h4>
+
+                                    <div class="product_price">
+                                        <div class="grid-price">
+                                            <span class="money editContent" >{{ movie.tagline }}</span>
+                                        </div>
+                                    </div>
+                                    <ul class="stars">
+                                        <li><a href="#"><span class="fa fa-star" aria-hidden="true" ></span></a></li>
+                                        <li><a href="#"><span class="fa fa-star" aria-hidden="true" ></span></a></li>
+                                        <li><a href="#"><span class="fa fa-star-half-o" aria-hidden="true" ></span></a></li>
+                                        <li><a href="#"><span class="fa fa-star-half-o" aria-hidden="true" ></span></a></li>
+                                        <li><a href="#"><span class="fa fa-star-o" aria-hidden="true" ></span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!--<div class="grid-img-right mt-4 text-right bg bg1" >
+                    <span class="money editContent" >Flat 50% Off</span>
+                    <a href="moviesingle.html" class="btn" >Now</a>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- //contact -->
+{% endblock %}
