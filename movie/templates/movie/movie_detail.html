@@ -73,19 +73,19 @@
                             <li style="list-style: none">
                                 <span><b>Режиссер:</b> 
                                     {% for director in movie.directors.all %}   
-                                        <a href="{{ director.get_absolute_url }}" class="editContent" >{{ director.name }}</a>
+                                        <a href="{{ director.get_absolute_url }}" class="editContent" >{{ director.name }}; </a>
                                     {% endfor %}
                                 </span></li>
                             <li style="list-style: none">
                                 <span><b>Актеры:</b> 
                                     {% for actor in movie.actors.all %}   
-                                        <a href="{{ actor.get_absolute_url }}" class="editContent" >{{ actor.name }}</a>
+                                        <a href="{{ actor.get_absolute_url }}" class="editContent" >{{ actor.name }}; </a>
                                     {% endfor %}
                                 </span></li>
                             <li style="list-style: none">
                                 <span><b>Жанр:</b> 
                                     {% for genre in movie.genres.all %}   
-                                        {{ genre.name }} 
+                                        {{ genre.name }},  
                                     {% endfor %}
                                 </span>
                             </li>
