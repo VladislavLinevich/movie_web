@@ -3,11 +3,11 @@ version: '3'
 services:
   web:
     build: ./
-    command: python manage.py runserver 0.0.0.0:8005
+    command: python manage.py runserver 0.0.0.0:8008
     volumes:
       - .:/movie_web
     ports:
-      - 8005:8005
+      - 8008:8008
     env_file:
       - ./.env.dev
     depends_on:
