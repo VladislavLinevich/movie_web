@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Genre, Movie, Actor, Rating, RatingStar, Reviews
+from .models import Category, Genre, Movie, Actor, Reviews
 # Register your models here.
 
 
@@ -15,6 +15,4 @@ class MovieAdmin(admin.ModelAdmin):
 class ActorAdmin(admin.ModelAdmin):
     list_display = ('name', 'age', 'get_image')
 
-admin.site.register(Rating)
-admin.site.register(RatingStar)
 admin.site.register(Reviews)

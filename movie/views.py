@@ -1,9 +1,8 @@
-from multiprocessing import context
-from pyexpat import model
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic.base import View
+from django.contrib.auth.decorators import login_required
 
-from movie.forms import UserRegistrationForm
+from movie.forms import ReviewForm, UserRegistrationForm
 from .models import Category, Movie, Actor, Genre
 from django.views import generic
 from django.db.models import Q
@@ -107,3 +106,18 @@ def register(request):
     else:
         user_form = UserRegistrationForm()
     return render(request, 'account/register.html', {'user_form': user_form})
+
+
+class AddReview(View):
+    """Отзывы"""
+    def post(self, request, pk):
+        form = ReviewForm(request.POST)
+        movie = Movie.objects.get(id=pk)
+        if request.user.is_anonymous:
+            return redirect('/accounts/login/?next=' + movie.get_absolute_url())
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.movie = movie
+            form.author = request.user
+            form.save()
+        return redirect(movie.get_absolute_url())

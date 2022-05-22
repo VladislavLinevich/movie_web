@@ -3,6 +3,7 @@ from tabnanny import verbose
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.contrib.auth.models import User
 from embed_video.fields import EmbedVideoField
 
 class Category(models.Model):
@@ -105,44 +106,14 @@ class Movie(models.Model):
         verbose_name = "Фильм"
         verbose_name_plural = "Фильмы"
 
-class RatingStar(models.Model):
-    """Звезда рейтинга"""
-    value = models.SmallIntegerField("Значение", default=0)
-
-    def __str__(self):
-        return f'{self.value}'
-
-    class Meta:
-        verbose_name = "Звезда рейтинга"
-        verbose_name_plural = "Звезды рейтинга"
-
-
-class Rating(models.Model):
-    """Рейтинг"""
-    ip = models.CharField("IP адрес", max_length=15)
-    star = models.ForeignKey(RatingStar, on_delete=models.CASCADE, verbose_name="звезда")
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="фильм", related_name="ratings")
-
-    def __str__(self):
-        return f"{self.star} - {self.movie}"
-
-    class Meta:
-        verbose_name = "Рейтинг"
-        verbose_name_plural = "Рейтинги"
-
-
 class Reviews(models.Model):
     """Отзывы"""
-    email = models.EmailField()
-    name = models.CharField("Имя", max_length=100)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField("Сообщение", max_length=5000)
-    parent = models.ForeignKey(
-        'self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
-    )
     movie = models.ForeignKey(Movie, verbose_name="фильм", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.name} - {self.movie}"
+        return f"{self.author} - {self.movie}"
 
     class Meta:
         verbose_name = "Отзыв"
