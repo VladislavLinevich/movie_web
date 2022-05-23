@@ -6,6 +6,8 @@ from movie.forms import ReviewForm, UserRegistrationForm
 from .models import Category, Movie, Actor, Genre
 from django.views import generic
 from django.db.models import Q
+import logging
+logger = logging.getLogger(__name__)
 
 class CustomMixin(object):
     
@@ -114,10 +116,12 @@ class AddReview(View):
         form = ReviewForm(request.POST)
         movie = Movie.objects.get(id=pk)
         if request.user.is_anonymous:
+            logger.info('User cant sent review')
             return redirect('/accounts/login/?next=' + movie.get_absolute_url())
         if form.is_valid():
             form = form.save(commit=False)
             form.movie = movie
             form.author = request.user
             form.save()
+            logger.info(f'{request.user} sent review for {movie}')
         return redirect(movie.get_absolute_url())
