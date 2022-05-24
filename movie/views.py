@@ -1,6 +1,8 @@
+import asyncio
 from django.shortcuts import redirect, render
 from django.views.generic.base import View
-from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from movie.async_requests import get_filter_movies, get_search_movies
 
 from movie.forms import ReviewForm, UserRegistrationForm
 from .models import Category, Movie, Actor, Genre
@@ -9,8 +11,8 @@ from django.db.models import Q
 import logging
 logger = logging.getLogger(__name__)
 
+
 class CustomMixin(object):
-    
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context["last_movies"] = Movie.objects.filter(draft=False).order_by("-id")[:4]
@@ -19,19 +21,23 @@ class CustomMixin(object):
         context["years"] = Movie.objects.filter(draft=False).values_list("year", flat=True).distinct("year")
         return context
 
+
 class MovieListView(CustomMixin, generic.ListView):
     """Список фильмов"""
     model = Movie
     queryset = Movie.objects.filter(draft=False)
     paginate_by = 3
 
+
 class MovieDetailView(CustomMixin, generic.DetailView):
     """Отдельный фильм"""
     model = Movie
 
+
 class ActorDetailView(CustomMixin, generic.DetailView):
-    """Отдельный фильм"""
+    """Отдельный актер"""
     model = Actor
+
 
 class FilterMoviesView(generic.ListView):
     """Фильтр фильмов"""
@@ -49,41 +55,17 @@ class FilterMoviesView(generic.ListView):
         return context
     
     def get_queryset(self):
-        if self.request.GET.getlist("genre") and self.request.GET.getlist("year") and self.request.GET.getlist("category"):
-            queryset = Movie.objects.filter(
-                Q(year__in=self.request.GET.getlist("year")) &
-                Q(genres__in=self.request.GET.getlist("genre")) &
-                Q(category__in=self.request.GET.getlist("category"))
-            ).distinct("title")
-        elif self.request.GET.getlist("genre") and self.request.GET.getlist("category"):
-            queryset = Movie.objects.filter(
-                Q(genres__in=self.request.GET.getlist("genre")) &
-                Q(category__in=self.request.GET.getlist("category"))
-            ).distinct("title")
-        elif self.request.GET.getlist("category") and self.request.GET.getlist("year"):
-            queryset = Movie.objects.filter(
-                Q(year__in=self.request.GET.getlist("year")) &
-                Q(category__in=self.request.GET.getlist("category"))
-            ).distinct("title")
-        elif self.request.GET.getlist("genre") and self.request.GET.getlist("year"):
-            queryset = Movie.objects.filter(
-                Q(genres__in=self.request.GET.getlist("genre")) &
-                Q(year__in=self.request.GET.getlist("year"))
-            ).distinct("title")
-        else:
-            queryset = Movie.objects.filter(
-                Q(year__in=self.request.GET.getlist("year")) |
-                Q(genres__in=self.request.GET.getlist("genre")) |
-                Q(category__in=self.request.GET.getlist("category"))
-            ).distinct("title")
-        return queryset
+        coroutine = get_filter_movies(self.request)
+        return asyncio.run(coroutine)
+
 
 class SearchMovieView(generic.ListView):
     """Поиск фильмов"""
     paginate_by = 3
 
     def get_queryset(self):
-        return Movie.objects.filter(title__icontains=self.request.GET.get("q"))
+        coroutine = get_search_movies(self.request)
+        return asyncio.run(coroutine)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -94,24 +76,26 @@ class SearchMovieView(generic.ListView):
         context["q"] = f'q={self.request.GET.get("q")}&'
         return context
 
-def register(request):
-    if request.method == 'POST':
+
+class RegisterView(View):
+    """Регистрация"""
+    def get(self, request):
+        user_form = UserRegistrationForm()
+        return render(request, 'account/register.html', {'user_form': user_form})
+
+    def post(self, request):
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
-            # Create a new user object but avoid saving it yet
             new_user = user_form.save(commit=False)
-            # Set the chosen password
+            messages.success(request, 'Успешно зарегестрирован')
             new_user.set_password(user_form.cleaned_data['password'])
-            # Save the User object
             new_user.save()
             return render(request, 'account/register_done.html', {'new_user': new_user})
-    else:
-        user_form = UserRegistrationForm()
-    return render(request, 'account/register.html', {'user_form': user_form})
+        return render(request, 'account/register.html', {'user_form': user_form})
 
 
 class AddReview(View):
-    """Отзывы"""
+    """Добавление отзыва"""
     def post(self, request, pk):
         form = ReviewForm(request.POST)
         movie = Movie.objects.get(id=pk)
