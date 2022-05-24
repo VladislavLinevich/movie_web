@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from django.views.generic.base import View
 from django.contrib import messages
 from movie.async_requests import get_filter_movies, get_search_movies
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from movie.forms import ReviewForm, UserRegistrationForm
 from .models import Category, Movie, Actor, Genre
 from django.views import generic
@@ -87,7 +87,6 @@ class RegisterView(View):
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
-            messages.success(request, 'Успешно зарегестрирован')
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             return render(request, 'account/register_done.html', {'new_user': new_user})
@@ -101,11 +100,14 @@ class AddReview(View):
         movie = Movie.objects.get(id=pk)
         if request.user.is_anonymous:
             logger.info('User cant sent review')
+            messages.warning(request, "Вы должны войти в аккаунт!")
             return redirect('/accounts/login/?next=' + movie.get_absolute_url())
         if form.is_valid():
             form = form.save(commit=False)
             form.movie = movie
             form.author = request.user
             form.save()
+            messages.success(request, "Отзыв оставлен успешно!")
             logger.info(f'{request.user} sent review for {movie}')
         return redirect(movie.get_absolute_url())
+    
