@@ -10,7 +10,6 @@ INSTALLED_APPS = [
     'embed_video',
     'movie',
 ]
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'guarded-castle-57208.herokuapp.com']
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -21,7 +20,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'guarded-castle-57208.herokuapp.com']
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
 LOGGING = {
