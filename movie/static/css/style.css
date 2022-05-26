@@ -842,17 +842,6 @@ ul.w3layouts-box-list li {
     font-size: 0.9em;
 }
 
-.grid-img-right {
-    background: url(../images/single.jpg)no-repeat center;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    -ms-background-size: cover;
-    background-size: cover;
-    position: relative;
-    height: 15em;
-    padding: 5.5em 2em 0 0;
-}
 
 .grid-img-right span.money {
     color: #fff;
