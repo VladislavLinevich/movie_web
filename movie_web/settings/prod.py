@@ -21,7 +21,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'radiant-plateau-43810.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dry-badlands-63391.herokuapp.com']
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
 LOGGING = {
