@@ -21,7 +21,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'obscure-dusk-95053.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'floating-castle-57328.herokuapp.com']
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
 LOGGING = {
