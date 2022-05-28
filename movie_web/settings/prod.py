@@ -10,6 +10,7 @@ INSTALLED_APPS = [
     'embed_video',
     'movie',
 ]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -21,9 +22,21 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rocky-refuge-76110.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'polar-peak-02084.herokuapp.com']
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
+
+DATABASES = {
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
+    }
+}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
