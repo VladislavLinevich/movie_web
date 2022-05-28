@@ -28,12 +28,12 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+        "ENGINE": 'django.db.backends.postgresql',
+        'NAME': 'dcv0sit1364upe',
+        'USER': 'mdajiryzrbcdhn',
+        'PASSWORD': '23a17553c63a768b9dea00cbf17e428a3e08b12224763e1c7241a800624ada2d',
+        'HOST': 'ec2-54-211-255-161.compute-1.amazonaws.com',
+        'PORT':  '5432'
     }
 }
 
