@@ -21,7 +21,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'floating-castle-57328.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rocky-refuge-76110.herokuapp.com']
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
 LOGGING = {
@@ -56,4 +56,4 @@ LOGGING = {
 }
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
