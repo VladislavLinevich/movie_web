@@ -23,8 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/login/', LoginView.as_view(), name="login"),
     path('accounts/logout/', LogoutView.as_view(), name="logout"),
-    path("",include("movie.urls")),
+    path("", include("movie.urls")),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-

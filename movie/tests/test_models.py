@@ -1,6 +1,6 @@
 from django.test import TestCase
-
 from movie.models import Category, Movie
+
 
 class CategoryModelTest(TestCase):
 
@@ -13,6 +13,7 @@ class CategoryModelTest(TestCase):
         expected_str = f'{category.name}'
         self.assertEquals(expected_str, str(category))
 
+
 class MovieModelTest(TestCase):
 
     @classmethod
@@ -23,4 +24,3 @@ class MovieModelTest(TestCase):
         movie = Movie.objects.get(id=1)
         expected_str = f'{movie.title}'
         self.assertEquals(expected_str, str(movie))
-

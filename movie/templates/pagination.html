@@ -2,7 +2,7 @@
     {% if page_obj.has_previous %}
         {% if page_obj.number|add:'-3' > 1 %}
             <li class="pagination__item">
-                <a href="?{{ q }}{{ pagi_genre }}{{ pagi_category }}{{ pagi_year }}page=1">1</a>
+                <a class="pagination__link" href="?{{ q }}{{ pagi_genre }}{{ pagi_category }}{{ pagi_year }}page=1">1</a>
             </li>
         {% endif %}
         {% if page_obj.number|add:'-3' >= 3 %}

@@ -6,6 +6,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
 from embed_video.fields import EmbedVideoField
 
+
 class Category(models.Model):
     name = models.CharField("Категории", max_length=20)
 
@@ -15,6 +16,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
+
 
 class Genre(models.Model):
     """Жанры"""
@@ -26,12 +28,14 @@ class Genre(models.Model):
     class Meta:
         verbose_name = "Жанр"
         verbose_name_plural = "Жанры"
-    
+
+
 class Actor(models.Model):
     name = models.CharField("Имя", max_length=30)
     age = models.PositiveSmallIntegerField("Возраст", default=0)
     description = models.TextField("Описание")
     image = models.URLField("Изображение")
+
     def __str__(self):
         return self.name
 
@@ -42,10 +46,11 @@ class Actor(models.Model):
 
     def get_absolute_url(self):
         return reverse('actor-detail', args=[str(self.id)])
-    
+
     class Meta:
         verbose_name = "Актеры и режиссеры"
         verbose_name_plural = "Актеры и режиссеры"
+
 
 class Movie(models.Model):
     """Фильм"""
@@ -76,7 +81,7 @@ class Movie(models.Model):
     def display_genre(self):
         """Создание строки жанров"""
         return ', '.join([genre.name for genre in self.genres.all()])
-    
+
     display_genre.short_description = 'Жанр'
 
     def get_poster(self):
@@ -87,13 +92,13 @@ class Movie(models.Model):
     def display_director(self):
         """Создание строки режиссеров"""
         return ', '.join([director.name for director in self.directors.all()])
-    
+
     display_director.short_description = 'Режиссеры'
 
     def display_actor(self):
         """Создание строки актеров"""
         return ', '.join([actor.name for actor in self.actors.all()])
-    
+
     display_actor.short_description = 'Актеры'
 
     def get_absolute_url(self):
@@ -105,6 +110,7 @@ class Movie(models.Model):
     class Meta:
         verbose_name = "Фильм"
         verbose_name_plural = "Фильмы"
+
 
 class Reviews(models.Model):
     """Отзывы"""

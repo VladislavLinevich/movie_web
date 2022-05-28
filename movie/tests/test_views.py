@@ -38,15 +38,15 @@ class MovieListViewTest(TestCase):
         resp = self.client.get(reverse('movies'))
         self.assertEqual(resp.status_code, 200)
         self.assertTrue('is_paginated' in resp.context)
-        self.assertTrue(resp.context['is_paginated'] == True)
-        self.assertTrue( len(resp.context['movie_list']) == 3)
+        self.assertTrue(resp.context['is_paginated'])
+        self.assertTrue(len(resp.context['movie_list']) == 3)
 
     def test_lists_all_authors(self):
-        resp = self.client.get(reverse('movies')+'?page=4')
+        resp = self.client.get(reverse('movies') + '?page=4')
         self.assertEqual(resp.status_code, 200)
         self.assertTrue('is_paginated' in resp.context)
-        self.assertTrue(resp.context['is_paginated'] == True)
-        self.assertTrue( len(resp.context['movie_list']) == 1)
+        self.assertTrue(resp.context['is_paginated'])
+        self.assertTrue(len(resp.context['movie_list']) == 1)
 
 
 class MovieDetailViewTest(TestCase):
@@ -76,9 +76,7 @@ class SearchViewTest(TestCase):
         Movie.objects.create(title='Avatar')
 
     def test_details(self):
-        url = '{url}?{filter}={value}'.format(
-        url=reverse('search'),
-        filter='q', value='Ter')
+        url = '{url}?{filter}={value}'.format(url=reverse('search'), filter='q', value='Ter')
         response = self.client.get(url)
         self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Terminator>"])
 
@@ -98,45 +96,31 @@ class FilterViewTest(TestCase):
         movie2.save()
 
     def test_details(self):
-        url = '{url}?{filter}={value}'.format(
-        url=reverse('filter'),
-        filter='year', value='1986')
-        response = self.client.get(url)
-        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Terminator>"])
-        
-        url = '{url}?{filter}={value}&{filter2}={value2}'.format(
-        url=reverse('filter'),
-        filter='category', value='3',
-        filter2="year", value2='2009')
-        response = self.client.get(url)
-        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Avatar>"])
-            
-        url = '{url}?{filter}={value}&{filter2}={value2}'.format(
-        url=reverse('filter'),
-        filter='genre', value='2',
-        filter2="year", value2='2009')
-        response = self.client.get(url)
-        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Avatar>"])
-
-        url = '{url}?{filter}={value}&{filter2}={value2}'.format(
-        url=reverse('filter'),
-        filter='genre', value='1',
-        filter2="category", value2='2')
+        url = '{url}?{filter}={value}'.format(url=reverse('filter'), filter='year', value='1986')
         response = self.client.get(url)
         self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Terminator>"])
 
-        url = '{url}?{filter}={value}&{filter2}={value2}&{filter3}={value3}'.format(
-        url=reverse('filter'),
-        filter='genre', value='1',
-        filter2="category", value2='2',
-        filter3="year", value3='1986')
+        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='category', value='3', filter2="year", value2='2009')
+        response = self.client.get(url)
+        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Avatar>"])
+
+        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='genre', value='2', filter2="year", value2='2009')
+        response = self.client.get(url)
+        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Avatar>"])
+
+        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='genre', value='1', filter2="category", value2='2')
         response = self.client.get(url)
         self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Terminator>"])
+
+        url = '{url}?{filter}={value}&{filter2}={value2}&{filter3}={value3}'.format(url=reverse('filter'), filter='genre', value='1', filter2="category", value2='2', filter3="year", value3='1986')
+        response = self.client.get(url)
+        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Terminator>"])
+
 
 class RegisterViewTest(TestCase):
 
     def test_register(self):
-        resp = self.client.get(reverse('register') )
+        resp = self.client.get(reverse('register'))
 
-        self.assertEqual( resp.status_code,200)
+        self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'account/register.html')

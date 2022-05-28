@@ -53,7 +53,7 @@ class FilterMoviesView(generic.ListView):
         context["pagi_category"] = ''.join([f"category={x}&" for x in self.request.GET.getlist("category")])
         context["pagi_genre"] = ''.join([f"genre={x}&" for x in self.request.GET.getlist("genre")])
         return context
-    
+
     def get_queryset(self):
         coroutine = get_filter_movies(self.request)
         return asyncio.run(coroutine)
@@ -110,4 +110,3 @@ class AddReview(View):
             messages.success(request, "Отзыв оставлен успешно!")
             logger.info(f'{request.user} sent review for {movie}')
         return redirect(movie.get_absolute_url())
-    
