@@ -130,3 +130,7 @@ dmypy.json
 
 # idea
 .idea
+
+.env.prod
+.env.prod.db
+.env.dev
