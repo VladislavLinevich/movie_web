@@ -17,5 +17,3 @@
 ![alt text](Screenshots/MovieDescriptionTrailer.png)
 # Movie review
 ![alt text](Screenshots/Review.png)
-# Actor or director detail
-![alt text](Screenshots/ActorDirectorDetail.png)
