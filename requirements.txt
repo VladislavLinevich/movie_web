@@ -1,6 +1,12 @@
 Django==4.0.4
 psycopg2-binary==2.9.3
-django-embed-video
-coverage
-gunicorn
-whitenoise
+django-embed-video==1.4.4
+coverage==6.4
+gunicorn==20.1.0
+whitenoise==6.1.0
+celery==5.2.7
+redis==4.3.1
+django-celery-results==2.3.1
+django-celery-beat==2.1.0
+factory-boy==3.2.1
+Faker==13.12.0

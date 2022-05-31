@@ -20,6 +20,30 @@ services:
       - POSTGRES_USER=hello_django
       - POSTGRES_PASSWORD=hello_django
       - POSTGRES_DB=hello_django_dev
-
+  redis:
+    image: redis:alpine
+  celery:
+    build: ./
+    command: celery -A movie_web worker -l info
+    volumes:
+      - .:/movie_web
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - redis
+      - web
+  celery-beat:
+    build: ./
+    command: celery -A movie_web beat -l info
+    volumes:
+      - .:/movie_web
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - redis
+      - web
+  
 volumes:
   postgres_data:

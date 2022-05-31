@@ -54,7 +54,8 @@ class Actor(models.Model):
 
 class Movie(models.Model):
     """Фильм"""
-    title = models.CharField("Название", max_length=80)
+    date_creation = models.DateTimeField("Дата добавления", auto_now_add=True)
+    title = models.CharField("Название", max_length=80, db_index=True)
     tagline = models.CharField("Слоган", max_length=80, default='')
     description = models.TextField("Описание")
     poster = models.URLField("Постер")

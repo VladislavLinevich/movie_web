@@ -7,7 +7,7 @@ admin.site.register(Genre)
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('title', 'get_poster', 'display_director', 'display_actor', 'category', 'display_genre', 'draft')
+    list_display = ('date_creation', 'title', 'get_poster', 'display_director', 'display_actor', 'category', 'display_genre', 'draft')
     list_filter = ('category', 'year')
 
 

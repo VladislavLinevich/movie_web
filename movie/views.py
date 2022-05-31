@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class CustomMixin(object):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context["last_movies"] = Movie.objects.filter(draft=False).order_by("-id")[:4]
+        context["last_movies"] = Movie.objects.prefetch_related('genres').filter(draft=False).order_by("-id")[:4]
         context["categories"] = Category.objects.all()
         context["genres"] = Genre.objects.all()
         context["years"] = Movie.objects.filter(draft=False).values_list("year", flat=True).distinct("year")
@@ -25,7 +25,7 @@ class CustomMixin(object):
 class MovieListView(CustomMixin, generic.ListView):
     """Список фильмов"""
     model = Movie
-    queryset = Movie.objects.filter(draft=False)
+    queryset = Movie.objects.select_related('category').filter(draft=False)
     paginate_by = 3
 
 

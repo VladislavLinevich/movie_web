@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 
 from movie.models import Category, Genre, Movie
 from django.urls import reverse
+from movie.tests.factories import GenreFactory, MovieFactory
 
 from movie.views import SearchMovieView
 
@@ -18,7 +19,7 @@ class MovieListViewTest(TestCase):
     def setUpTestData(cls):
         number_of_movies = 10
         for movie_num in range(number_of_movies):
-            Movie.objects.create(title=f'Terminator {movie_num}')
+            MovieFactory.create()
 
     def test_view_url_exists_at_desired_location(self):
         resp = self.client.get('')
@@ -52,7 +53,7 @@ class MovieListViewTest(TestCase):
 class MovieDetailViewTest(TestCase):
 
     def setUp(self):
-        self.movie = Movie.objects.create(title='Terminator', video='https://www.youtube.com/watch?v=k64P4l2Wmeg&t=31s')
+        self.movie = MovieFactory()
 
     def test_view_url_exists_at_desired_location(self):
         resp = self.client.get(f'/movie/{self.movie.pk}/')
@@ -72,8 +73,8 @@ class MovieDetailViewTest(TestCase):
 class SearchViewTest(TestCase):
 
     def setUp(self):
-        Movie.objects.create(title='Terminator')
-        Movie.objects.create(title='Avatar')
+        MovieFactory.create(title='Terminator')
+        MovieFactory.create(title='Avatar')
 
     def test_details(self):
         url = '{url}?{filter}={value}'.format(url=reverse('search'), filter='q', value='Ter')
@@ -84,37 +85,31 @@ class SearchViewTest(TestCase):
 class FilterViewTest(TestCase):
 
     def setUp(self):
-        genre = Genre.objects.create(name='action')
-        genre2 = Genre.objects.create(name='fantasy')
-        category = Category.objects.create(name='movie')
-        category2 = Category.objects.create(name='serial')
-        movie1 = Movie.objects.create(title='Terminator', year=1986, category=category)
-        movie2 = Movie.objects.create(title='Avatar', year=2009, category=category2)
-        movie1.genres.add(genre)
-        movie2.genres.add(genre2)
-        movie1.save()
-        movie2.save()
+        self.genre = GenreFactory()
+        self.genre2 = GenreFactory()
+        self.movie1 = MovieFactory(genres=(self.genre, ))
+        self.movie2 = MovieFactory(genres=(self.genre2, ))
 
     def test_details(self):
-        url = '{url}?{filter}={value}'.format(url=reverse('filter'), filter='year', value='1986')
+        url = '{url}?{filter}={value}'.format(url=reverse('filter'), filter='year', value=f'{self.movie1.year}')
         response = self.client.get(url)
-        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Terminator>"])
+        self.assertQuerysetEqual(response.context['object_list'], [f"<Movie: {self.movie1.title}>"])
 
-        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='category', value='3', filter2="year", value2='2009')
+        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='category', value=f'{self.movie2.category.id}', filter2="year", value2=f'{self.movie2.year}')
         response = self.client.get(url)
-        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Avatar>"])
+        self.assertQuerysetEqual(response.context['object_list'], [f"<Movie: {self.movie2.title}>"])
 
-        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='genre', value='2', filter2="year", value2='2009')
+        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='genre', value=f'{self.genre2.id}', filter2="year", value2=f'{self.movie2.year}')
         response = self.client.get(url)
-        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Avatar>"])
+        self.assertQuerysetEqual(response.context['object_list'], [f"<Movie: {self.movie2.title}>"])
 
-        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='genre', value='1', filter2="category", value2='2')
+        url = '{url}?{filter}={value}&{filter2}={value2}'.format(url=reverse('filter'), filter='genre', value=f'{self.genre.id}', filter2="category", value2=f'{self.movie1.category.id}')
         response = self.client.get(url)
-        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Terminator>"])
+        self.assertQuerysetEqual(response.context['object_list'], [f"<Movie: {self.movie1.title}>"])
 
-        url = '{url}?{filter}={value}&{filter2}={value2}&{filter3}={value3}'.format(url=reverse('filter'), filter='genre', value='1', filter2="category", value2='2', filter3="year", value3='1986')
+        url = '{url}?{filter}={value}&{filter2}={value2}&{filter3}={value3}'.format(url=reverse('filter'), filter='genre', value=f'{self.genre.id}', filter2="category", value2=f'{self.movie1.category.id}', filter3="year", value3=f'{self.movie1.year}')
         response = self.client.get(url)
-        self.assertQuerysetEqual(response.context['object_list'], ["<Movie: Terminator>"])
+        self.assertQuerysetEqual(response.context['object_list'], [f"<Movie: {self.movie1.title}>"])
 
 
 class RegisterViewTest(TestCase):
